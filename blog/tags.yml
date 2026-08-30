@@ -1,0 +1,19 @@
+dotnet:
+  label: .NET
+  permalink: /dotnet
+  description: C# and the .NET ecosystem
+
+async:
+  label: Async
+  permalink: /async
+  description: Concurrency, async/await, and related patterns
+
+architecture:
+  label: Architecture
+  permalink: /architecture
+  description: System and software architecture patterns
+
+distributed-systems:
+  label: Distributed Systems
+  permalink: /distributed-systems
+  description: Messaging, consistency, and multi-service concerns

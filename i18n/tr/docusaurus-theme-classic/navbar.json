@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Burak's Notes",
+    "description": "The title in the navbar"
+  },
+  "item.label.Posts": {
+    "message": "Yazılar",
+    "description": "Navbar item with label Posts"
+  },
+  "item.label.About": {
+    "message": "Hakkında",
+    "description": "Navbar item with label About"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

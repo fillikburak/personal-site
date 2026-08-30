@@ -1,0 +1,128 @@
+.layout {
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: 2rem;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border-right: 1px solid var(--ifm-toc-border-color);
+  padding-right: 1rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: left;
+  font-size: 0.88rem;
+  color: var(--ifm-color-emphasis-700);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+}
+
+.navItem:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.navItem.active {
+  color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+  font-weight: 600;
+}
+
+.count {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  min-width: 0;
+}
+
+.section:first-child .sectionTitle {
+  margin-top: 0;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle a {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+
+.sectionTitle a:hover {
+  color: var(--ifm-color-primary);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card {
+  border: 1px solid var(--ifm-toc-border-color);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+}
+
+.cardDate {
+  font-size: 0.72rem;
+  color: var(--ifm-color-emphasis-500);
+  margin-bottom: 0.3rem;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.cardTitle a {
+  color: var(--ifm-heading-color);
+  text-decoration: none;
+}
+
+.cardTitle a:hover {
+  color: var(--ifm-color-primary);
+}
+
+.cardDescription {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid var(--ifm-toc-border-color);
+    padding-right: 0;
+    padding-bottom: 0.75rem;
+  }
+
+  .navItem {
+    border: 1px solid var(--ifm-toc-border-color);
+    border-radius: 999px;
+  }
+}

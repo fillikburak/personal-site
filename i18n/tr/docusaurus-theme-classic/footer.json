@@ -1,0 +1,30 @@
+{
+  "link.title.Site": {
+    "message": "Site",
+    "description": "The title of the footer links column with title=Site in the footer"
+  },
+  "link.title.More": {
+    "message": "Diğer",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Posts": {
+    "message": "Yazılar",
+    "description": "The label of footer link with label=Posts linking to /"
+  },
+  "link.item.label.About": {
+    "message": "Hakkında",
+    "description": "The label of footer link with label=About linking to /about"
+  },
+  "link.item.label.RSS": {
+    "message": "RSS",
+    "description": "The label of footer link with label=RSS linking to pathname:///rss.xml"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/burakfillik/personal-site"
+  },
+  "copyright": {
+    "message": "© 2026 Burak. Docusaurus ile oluşturuldu.",
+    "description": "The footer copyright"
+  }
+}

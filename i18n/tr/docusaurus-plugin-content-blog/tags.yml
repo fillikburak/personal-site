@@ -1,0 +1,19 @@
+dotnet:
+  label: .NET
+  permalink: /dotnet
+  description: C# ve .NET ekosistemi
+
+async:
+  label: Asenkron
+  permalink: /async
+  description: Eşzamanlılık, async/await ve ilgili kalıplar
+
+architecture:
+  label: Mimari
+  permalink: /architecture
+  description: Sistem ve yazılım mimarisi kalıpları
+
+distributed-systems:
+  label: Dağıtık Sistemler
+  permalink: /distributed-systems
+  description: Mesajlaşma, tutarlılık ve çoklu servis konuları

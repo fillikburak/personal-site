@@ -1,0 +1,14 @@
+{
+  "title": {
+    "message": "Burak's Notes",
+    "description": "The title for the blog used in SEO"
+  },
+  "description": {
+    "message": "Öğrendiğim şeyler hakkında notlar, yazıya dökülmüş.",
+    "description": "The description for the blog used in SEO"
+  },
+  "sidebar.title": {
+    "message": "Son yazılar",
+    "description": "The label for the left sidebar"
+  }
+}

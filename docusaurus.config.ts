@@ -101,7 +101,6 @@ const config: Config = {
       items: [
         {to: '/', label: 'Posts', position: 'left'},
         {to: '/about', label: 'About', position: 'left'},
-        {type: 'custom-viewModeToggle', position: 'right'},
         {
           href: 'https://github.com/fillikburak/personal-site',
           label: 'GitHub',

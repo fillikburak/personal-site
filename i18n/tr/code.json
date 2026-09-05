@@ -1,24 +1,4 @@
 {
-  "viewMode.list": {
-    "message": "Liste",
-    "description": "View toggle: list view"
-  },
-  "viewMode.grouped": {
-    "message": "Gruplu",
-    "description": "View toggle: grouped-by-topic view"
-  },
-  "viewMode.grid": {
-    "message": "Izgara",
-    "description": "View toggle: grid view"
-  },
-  "viewMode.ariaLabel": {
-    "message": "Görünüm modu",
-    "description": "Accessible label for the List/Grouped/Grid toggle"
-  },
-  "gridView.readingTime": {
-    "message": "{count} dk",
-    "description": "Grid card: reading time, e.g. '2 min'"
-  },
   "groupedView.topicsAriaLabel": {
     "message": "Konular",
     "description": "Accessible label for the topic list in Grouped view"

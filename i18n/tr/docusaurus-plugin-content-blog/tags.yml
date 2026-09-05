@@ -17,3 +17,8 @@ distributed-systems:
   label: Dağıtık Sistemler
   permalink: /distributed-systems
   description: Mesajlaşma, tutarlılık ve çoklu servis konuları
+
+memory:
+  label: Bellek
+  permalink: /memory
+  description: GC, bellek ayırma ve çalışma zamanı bellek davranışı

@@ -4,6 +4,8 @@ A personal notes/write-up site, built with [Docusaurus](https://docusaurus.io/)
 in blog-only mode. Every post is one topic learned (async/await, outbox
 pattern, etc.) — dated, tagged, and searchable.
 
+**Live site: https://fillikburak.github.io/personal-site/**
+
 ## Adding a new post
 
 1. Create a new folder under `blog/`, named `YYYY-MM-DD-slug/`, with an

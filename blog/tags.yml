@@ -17,3 +17,8 @@ distributed-systems:
   label: Distributed Systems
   permalink: /distributed-systems
   description: Messaging, consistency, and multi-service concerns
+
+memory:
+  label: Memory
+  permalink: /memory
+  description: GC, allocations, and runtime memory behavior

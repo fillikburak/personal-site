@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taslak Editörü — Burak's Notes</title>
+<style>
+  :root {
+    --bg: #15171c;
+    --surface: #1c1f26;
+    --text: #e7e8ec;
+    --text-muted: #9aa0ac;
+    --accent: #8fb0dd;
+    --border: #2a2e37;
+    --danger: #e08b8b;
+    --ok: #8fdca0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    padding: 32px;
+  }
+  .wrap { max-width: 780px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  h2 { font-size: 17px; margin: 0 0 14px; display: flex; align-items: center; gap: 10px; }
+  p.sub { color: var(--text-muted); font-size: 13.5px; margin-top: 0; margin-bottom: 28px; }
+  label { display: block; font-size: 13px; color: var(--text-muted); margin: 18px 0 6px; }
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  textarea { font-family: ui-monospace, monospace; min-height: 380px; line-height: 1.6; resize: vertical; }
+  .radio-row, .tags-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .radio-row label, .tags-row label {
+    display: flex; align-items: center; gap: 6px;
+    margin: 0; color: var(--text); font-size: 14px; cursor: pointer;
+  }
+  button {
+    background: var(--accent);
+    color: #10131a;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  button.small { padding: 7px 14px; font-size: 13px; }
+  button:disabled { opacity: 0.5; cursor: default; }
+  .formActions { display: flex; gap: 10px; align-items: center; margin-top: 22px; }
+  #result { margin-top: 16px; font-size: 13.5px; white-space: pre-wrap; }
+  #result.ok { color: var(--ok); }
+  #result.err { color: var(--danger); }
+  .editingBadge { font-size: 12px; font-weight: 500; color: var(--accent); background: rgba(143,176,221,0.12); padding: 3px 9px; border-radius: 999px; }
+
+  section { margin-bottom: 44px; }
+  .draftCard {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .draftCard .head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .draftCard h3 { font-size: 16px; margin: 0; }
+  .badge {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; background: var(--border); color: var(--text-muted);
+  }
+  .draftCard .meta { font-size: 12.5px; color: var(--text-muted); margin-bottom: 10px; }
+  .draftCard pre {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 14px; font-size: 13px; line-height: 1.6; max-height: 200px; overflow: auto;
+    white-space: pre-wrap; margin: 0 0 12px;
+  }
+  .draftCard .actions { display: flex; align-items: center; gap: 10px; }
+  .draftCard .status { font-size: 13px; }
+  .empty { color: var(--text-muted); font-size: 13.5px; }
+
+  .publishedRow {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 10px 0; border-top: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .publishedRow:first-child { border-top: none; }
+  .publishedRow .date { color: var(--text-muted); font-size: 12.5px; width: 76px; flex-shrink: 0; }
+  .publishedRow .title { flex-grow: 1; }
+  .publishedRow .tags { color: var(--text-muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Taslak Editörü</h1>
+  <p class="sub">Buradan yazdığın taslak <code>draft: true</code> ile kaydedilir, prod build'e hiç girmez. İstediğin zaman "Kaydet" ile bırakıp sonra devam edebilirsin. Hazır olunca "Onayla ve Yayınla" ile commit + push otomatik yapılır.</p>
+
+  <section>
+    <h2>Taslaklar</h2>
+    <div id="drafts"><p class="empty">Yükleniyor…</p></div>
+  </section>
+
+  <section>
+    <h2 id="formTitle">Yeni taslak</h2>
+    <form id="editForm">
+      <label for="title">Başlık</label>
+      <input type="text" id="title" required placeholder="Örn: Idempotency keys">
+
+      <div id="languageField">
+        <label>Dil</label>
+        <div class="radio-row">
+          <label><input type="radio" name="language" value="tr" checked> Türkçe</label>
+          <label><input type="radio" name="language" value="en"> English</label>
+        </div>
+      </div>
+
+      <label>Etiketler (ilk seçilen, ana konu grubu olur)</label>
+      <div class="tags-row" id="tags"></div>
+
+      <label for="content">İçerik (Markdown)</label>
+      <textarea id="content" required placeholder="{/* truncate */} işaretini özet olacak paragraftan sonra unutma."></textarea>
+
+      <div class="formActions">
+        <button type="submit" id="submitBtn">Taslak Oluştur</button>
+        <button type="button" id="cancelEditBtn" class="secondary" style="display:none">Yeni taslak başlat</button>
+      </div>
+      <div id="result"></div>
+    </form>
+  </section>
+
+  <section>
+    <h2>Yayınlanmış Yazılar</h2>
+    <div id="published"><p class="empty">Yükleniyor…</p></div>
+  </section>
+</div>
+
+<script>
+let editingPath = null;
+let allTags = [];
+
+function escapeHtml(s) {
+  return s.replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+async function loadTags() {
+  const res = await fetch('/api/tags');
+  allTags = await res.json();
+  renderTagCheckboxes([]);
+}
+
+function renderTagCheckboxes(checkedKeys) {
+  const container = document.getElementById('tags');
+  container.innerHTML = '';
+  allTags.forEach((tag) => {
+    const label = document.createElement('label');
+    const checked = checkedKeys.includes(tag.key) ? 'checked' : '';
+    label.innerHTML = `<input type="checkbox" name="tags" value="${tag.key}" ${checked}> ${tag.label}`;
+    container.appendChild(label);
+  });
+}
+
+function startEdit(draft) {
+  editingPath = draft.path;
+  document.getElementById('formTitle').innerHTML =
+    `Taslağı düzenle <span class="editingBadge">${draft.path}</span>`;
+  document.getElementById('title').value = draft.title;
+  document.getElementById('content').value = draft.content;
+  document.getElementById('languageField').style.display = 'none'; // language can't change once created
+  renderTagCheckboxes(draft.tags.split(',').map((t) => t.trim()).filter(Boolean));
+  document.getElementById('submitBtn').textContent = 'Kaydet';
+  document.getElementById('cancelEditBtn').style.display = 'inline-block';
+  document.getElementById('result').textContent = '';
+  document.getElementById('result').className = '';
+  window.scrollTo({ top: document.getElementById('formTitle').offsetTop - 20, behavior: 'smooth' });
+}
+
+function resetForm() {
+  editingPath = null;
+  document.getElementById('formTitle').textContent = 'Yeni taslak';
+  document.getElementById('editForm').reset();
+  document.getElementById('languageField').style.display = '';
+  renderTagCheckboxes([]);
+  document.getElementById('submitBtn').textContent = 'Taslak Oluştur';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('result').textContent = '';
+  document.getElementById('result').className = '';
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+function draftCardHtml(draft) {
+  const langLabel = draft.language === 'tr' ? 'Türkçe' : 'English';
+  return `
+    <div class="draftCard" data-path="${draft.path}">
+      <div class="head">
+        <h3>${escapeHtml(draft.title)}</h3>
+        <span class="badge">${langLabel}</span>
+      </div>
+      <div class="meta">${escapeHtml(draft.tags)} · ${draft.path}</div>
+      <pre>${escapeHtml(draft.content)}</pre>
+      <div class="actions">
+        <button class="editBtn small secondary">Düzenle</button>
+        <button class="publishBtn small">Onayla ve Yayınla</button>
+        <span class="status"></span>
+      </div>
+    </div>
+  `;
+}
+
+async function loadDrafts() {
+  const container = document.getElementById('drafts');
+  const res = await fetch('/api/drafts');
+  const drafts = await res.json();
+  if (drafts.length === 0) {
+    container.innerHTML = '<p class="empty">Henüz taslak yok.</p>';
+    return;
+  }
+  container.innerHTML = drafts.map(draftCardHtml).join('');
+
+  container.querySelectorAll('.editBtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.draftCard');
+      const path = card.dataset.path;
+      const draft = drafts.find((d) => d.path === path);
+      if (draft) startEdit(draft);
+    });
+  });
+
+  container.querySelectorAll('.publishBtn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const card = btn.closest('.draftCard');
+      const draftPath = card.dataset.path;
+      const title = card.querySelector('h3').textContent;
+      if (!confirm(`"${title}" yayınlansın mı? Bu işlem commit + push yapacak.`)) return;
+
+      btn.disabled = true;
+      const statusEl = card.querySelector('.status');
+      statusEl.textContent = 'Yayınlanıyor…';
+      statusEl.style.color = 'var(--text-muted)';
+
+      try {
+        const res = await fetch('/api/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: draftPath }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Bilinmeyen hata');
+        statusEl.textContent = 'Yayınlandı ✓';
+        statusEl.style.color = 'var(--ok)';
+        if (editingPath === draftPath) resetForm();
+        setTimeout(() => { card.remove(); loadPublished(); }, 1200);
+      } catch (err) {
+        statusEl.textContent = `Hata: ${err.message}`;
+        statusEl.style.color = 'var(--danger)';
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+function publishedRowHtml(post) {
+  const langLabel = post.language === 'tr' ? 'TR' : 'EN';
+  return `
+    <div class="publishedRow">
+      <span class="date">${post.date || ''}</span>
+      <span class="title">${escapeHtml(post.title)} <span class="badge">${langLabel}</span></span>
+      <span class="tags">${escapeHtml(post.tags)}</span>
+    </div>
+  `;
+}
+
+async function loadPublished() {
+  const container = document.getElementById('published');
+  const res = await fetch('/api/published');
+  const posts = await res.json();
+  if (posts.length === 0) {
+    container.innerHTML = '<p class="empty">Henüz yayınlanmış yazı yok.</p>';
+    return;
+  }
+  container.innerHTML = posts.map(publishedRowHtml).join('');
+}
+
+document.getElementById('editForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const resultEl = document.getElementById('result');
+  resultEl.textContent = '';
+  resultEl.className = '';
+
+  const title = document.getElementById('title').value;
+  const content = document.getElementById('content').value;
+  const tags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map((el) => el.value);
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+
+  try {
+    let res, data;
+    if (editingPath) {
+      res = await fetch('/api/update-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ path: editingPath, title, content, tags }),
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Bilinmeyen hata');
+      resultEl.textContent = `Kaydedildi: ${editingPath}`;
+    } else {
+      const language = document.querySelector('input[name="language"]:checked').value;
+      res = await fetch('/api/create-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content, language, tags }),
+      });
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Bilinmeyen hata');
+      resultEl.textContent = `Oluşturuldu: ${data.path}`;
+    }
+    resultEl.className = 'ok';
+    resetForm();
+    loadDrafts();
+  } catch (err) {
+    resultEl.textContent = `Hata: ${err.message}`;
+    resultEl.className = 'err';
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+
+loadTags();
+loadDrafts();
+loadPublished();
+</script>
+</body>
+</html>
